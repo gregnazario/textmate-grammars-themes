@@ -155,6 +155,25 @@
 #DBD7CACC              total + value
 #DBD7CACC          }
 #DBD7CACC          
+#4D9375        package
+#DBD7CACC       
+#CB7676        fun
+#DBD7CACC       
+#80A665        same_visibility
+#DBD7CACC      (shape: 
+#5DA994        Shape
+#DBD7CACC      , values: 
+#B8A965        vector
+#DBD7CACC      <
+#B8A965        u64
+#DBD7CACC      >): 
+#B8A965        u64
+#DBD7CACC       {
+#DBD7CACC              
+#80A665        area
+#DBD7CACC      (shape, values)
+#DBD7CACC          }
+#DBD7CACC          
 #758575DD      // Declare a unit test. It takes a signer called `account` with an
 #DBD7CACC          
 #758575DD      // address value of `0xC0FFEE`.

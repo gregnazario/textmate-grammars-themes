@@ -24,6 +24,9 @@
       "include": "#entry"
     },
     {
+      "include": "#package_visibility"
+    },
+    {
       "include": "#public-scope"
     },
     {
@@ -1068,6 +1071,9 @@
               "include": "#entry"
             },
             {
+              "include": "#package_visibility"
+            },
+            {
               "include": "#public-scope"
             },
             {
@@ -1137,6 +1143,11 @@
       "comment": "native",
       "match": "\\b(native)\\b",
       "name": "storage.modifier.visibility.native.move"
+    },
+    "package_visibility": {
+      "comment": "Move 2 bare package visibility",
+      "match": "\\b(package)\\b",
+      "name": "keyword.control.public.scope.move"
     },
     "packed_field": {
       "comment": "[ident]: ",
@@ -1231,6 +1242,9 @@
             },
             {
               "include": "#fun"
+            },
+            {
+              "include": "#package_visibility"
             }
           ]
         }

@@ -902,6 +902,14 @@ export const sourcesCommunity: GrammarSource[] = [
         }
       }
 
+      if (!repository.package_visibility) {
+        repository.package_visibility = {
+          name: 'keyword.control.public.scope.move',
+          comment: 'Move 2 bare package visibility',
+          match: '\\b(package)\\b',
+        }
+      }
+
       const rootPatterns = grammar.patterns as any[] | undefined
       const exprPatterns = repository.expr?.patterns as any[] | undefined
       const pathAccess = repository.path_access
@@ -910,8 +918,11 @@ export const sourcesCommunity: GrammarSource[] = [
       const moduleScopePatterns = findNamedPattern(repository.module?.patterns, 'meta.module_scope.move')?.patterns as any[] | undefined
       const scriptScopePatterns = findNamedPattern(repository.script?.patterns, 'meta.script_scope.move')?.patterns as any[] | undefined
 
+      insertIncludeBefore(rootPatterns, '#package_visibility', '#public-scope')
       insertIncludeBefore(rootPatterns, '#inline', '#fun')
+      insertIncludeBefore(moduleScopePatterns, '#package_visibility', '#public-scope')
       insertIncludeBefore(moduleScopePatterns, '#inline', '#fun')
+      insertIncludeBefore(scriptScopePatterns, '#package_visibility', '#public-scope')
       insertIncludeBefore(scriptScopePatterns, '#inline', '#fun')
       insertIncludeBefore(exprPatterns, '#pattern_wildcard', '#path_access')
       insertIncludeBefore(exprPatterns, '#struct_pack', '#block')

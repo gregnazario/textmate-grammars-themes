@@ -854,6 +854,78 @@ export const sourcesCommunity: GrammarSource[] = [
     name: 'move',
     displayName: 'Move',
     source: 'https://github.com/damirka/move-syntax/blob/main/syntaxes/move.tmLanguage.json',
+    // TODO: Drop this patch once the upstream grammar fully supports Move 2 syntax.
+    patch: (grammar) => {
+      const repository = grammar.repository || (grammar.repository = {})
+
+      function insertIncludeBefore(patterns: any[] | undefined, include: string, beforeInclude: string) {
+        if (!patterns || patterns.some(pattern => pattern.include === include))
+          return
+
+        const index = patterns.findIndex(pattern => pattern.include === beforeInclude)
+        patterns.splice(index < 0 ? patterns.length : index, 0, { include })
+      }
+
+      function insertIncludeAfter(patterns: any[] | undefined, include: string, afterInclude: string) {
+        if (!patterns || patterns.some(pattern => pattern.include === include))
+          return
+
+        const index = patterns.findIndex(pattern => pattern.include === afterInclude)
+        patterns.splice(index < 0 ? patterns.length : index + 1, 0, { include })
+      }
+
+      function findNamedPattern(patterns: any[] | undefined, name: string) {
+        return patterns?.find(pattern => pattern.name === name)
+      }
+
+      if (!repository.address_literal) {
+        repository.address_literal = {
+          comment: 'Address literal or named address',
+          patterns: [
+            {
+              name: 'constant.other.move',
+              match: '\\b0x[A-Fa-f0-9]+\\b',
+            },
+            {
+              name: 'constant.other.move',
+              match: '\\b[a-zA-Z][A-Za-z_0-9]*\\b(?=::)',
+            },
+          ],
+        }
+      }
+
+      if (!repository.pattern_wildcard) {
+        repository.pattern_wildcard = {
+          name: 'keyword.control.move',
+          comment: 'Move 2 wildcard patterns',
+          match: '\\b_\\b|\\.\\.',
+        }
+      }
+
+      const rootPatterns = grammar.patterns as any[] | undefined
+      const exprPatterns = repository.expr?.patterns as any[] | undefined
+      const pathAccess = repository.path_access
+      const structPackPatterns = repository.struct_pack?.patterns as any[] | undefined
+      const matchBlockPatterns = findNamedPattern(repository.match_expression?.patterns, 'meta.match.block.move')?.patterns as any[] | undefined
+      const moduleScopePatterns = findNamedPattern(repository.module?.patterns, 'meta.module_scope.move')?.patterns as any[] | undefined
+      const scriptScopePatterns = findNamedPattern(repository.script?.patterns, 'meta.script_scope.move')?.patterns as any[] | undefined
+
+      insertIncludeBefore(rootPatterns, '#inline', '#fun')
+      insertIncludeBefore(moduleScopePatterns, '#inline', '#fun')
+      insertIncludeBefore(scriptScopePatterns, '#inline', '#fun')
+      insertIncludeBefore(exprPatterns, '#pattern_wildcard', '#path_access')
+      insertIncludeBefore(exprPatterns, '#struct_pack', '#block')
+      insertIncludeAfter(structPackPatterns, '#packed_field', '#comments')
+      insertIncludeAfter(structPackPatterns, '#pattern_wildcard', '#packed_field')
+      insertIncludeAfter(structPackPatterns, '#expr', '#pattern_wildcard')
+
+      if (pathAccess?.match === '\\.[a-z][_a-z0-9]*\\b')
+        pathAccess.match = '\\.(?:[a-z][_a-z0-9]*|[0-9]+)\\b'
+
+      const arrowPattern = findNamedPattern(matchBlockPatterns, 'operator.match.move')
+      if (arrowPattern?.match === '\\b(=>)\\b')
+        arrowPattern.match = '=>'
+    },
   },
   {
     name: 'narrat',

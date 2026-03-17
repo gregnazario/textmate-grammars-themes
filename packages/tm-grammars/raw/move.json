@@ -54,6 +54,9 @@
       "include": "#macro"
     },
     {
+      "include": "#inline"
+    },
+    {
       "include": "#fun"
     },
     {
@@ -103,6 +106,19 @@
         },
         {
           "include": "#module"
+        }
+      ]
+    },
+    "address_literal": {
+      "comment": "Address literal or named address",
+      "patterns": [
+        {
+          "match": "\\b0x[A-Fa-f0-9]+\\b",
+          "name": "constant.other.move"
+        },
+        {
+          "match": "\\b[a-zA-Z][A-Za-z_0-9]*\\b(?=::)",
+          "name": "constant.other.move"
         }
       ]
     },
@@ -410,6 +426,9 @@
           "include": "#method_call"
         },
         {
+          "include": "#pattern_wildcard"
+        },
+        {
           "include": "#path_access"
         },
         {
@@ -438,6 +457,9 @@
         },
         {
           "include": "#paren"
+        },
+        {
+          "include": "#struct_pack"
         },
         {
           "include": "#block"
@@ -952,7 +974,7 @@
           "patterns": [
             {
               "comment": "arrow operator",
-              "match": "\\b(=>)\\b",
+              "match": "=>",
               "name": "operator.match.move"
             },
             {
@@ -1076,6 +1098,9 @@
               "include": "#macro"
             },
             {
+              "include": "#inline"
+            },
+            {
               "include": "#fun"
             },
             {
@@ -1130,8 +1155,13 @@
     },
     "path_access": {
       "comment": "<expr>.[ident] access",
-      "match": "\\.[a-z][_a-z0-9]*\\b",
+      "match": "\\.(?:[a-z][_a-z0-9]*|[0-9]+)\\b",
       "name": "meta.path.access.move"
+    },
+    "pattern_wildcard": {
+      "comment": "Move 2 wildcard patterns",
+      "match": "\\b_\\b|\\.\\.",
+      "name": "keyword.control.move"
     },
     "phantom": {
       "comment": "Keyword phantom inside type parameters",
@@ -1195,6 +1225,9 @@
             },
             {
               "include": "#import"
+            },
+            {
+              "include": "#inline"
             },
             {
               "include": "#fun"
@@ -1460,6 +1493,15 @@
       "patterns": [
         {
           "include": "#comments"
+        },
+        {
+          "include": "#packed_field"
+        },
+        {
+          "include": "#pattern_wildcard"
+        },
+        {
+          "include": "#expr"
         }
       ]
     },

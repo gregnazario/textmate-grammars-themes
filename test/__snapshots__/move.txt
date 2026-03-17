@@ -174,6 +174,34 @@
 #DBD7CACC      (shape, values)
 #DBD7CACC          }
 #DBD7CACC          
+#4D9375        package
+#DBD7CACC       
+#CB7676        fun
+#DBD7CACC       
+#80A665        signed_math
+#DBD7CACC      (): 
+#B8A965        i64
+#DBD7CACC       {
+#DBD7CACC              
+#4D9375        let
+#DBD7CACC       
+#CB7676        mut
+#DBD7CACC       total = 
+#4C9A91        -1i64
+#DBD7CACC      ;
+#DBD7CACC              total 
+#CB7676        +=
+#DBD7CACC       
+#4C9A91        2i64
+#DBD7CACC      ;
+#DBD7CACC              total 
+#CB7676        -=
+#DBD7CACC       
+#4C9A91        -0x1i64
+#DBD7CACC      ;
+#DBD7CACC              total
+#DBD7CACC          }
+#DBD7CACC          
 #758575DD      // Declare a unit test. It takes a signer called `account` with an
 #DBD7CACC          
 #758575DD      // address value of `0xC0FFEE`.

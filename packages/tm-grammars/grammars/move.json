@@ -194,6 +194,10 @@
         }
       ]
     },
+    "compound_assignment": {
+      "match": "[-+]=",
+      "name": "keyword.operator.assignment.compound.move"
+    },
     "const": {
       "begin": "\\b(const)\\b",
       "beginCaptures": {
@@ -376,6 +380,9 @@
         },
         {
           "include": "#types"
+        },
+        {
+          "include": "#compound_assignment"
         },
         {
           "include": "#literals"
@@ -777,11 +784,11 @@
           "name": "support.constant.address.name.move"
         },
         {
-          "match": "0x[_\\h]+(?:u(?:8|16|32|64|128|256))?",
+          "match": "(?<![]).}\\w])-?0x[_\\h]+(?:[iu](?:8|16|32|64|128|256))?",
           "name": "constant.numeric.hex.move"
         },
         {
-          "match": "(?<!\\w|(?<!\\.)\\.)[0-9][0-9_]*(?:\\.(?!\\.)(?:[0-9][0-9_]*)?)?(?:[Ee][-+]?[0-9_]+)?(?:u(?:8|16|32|64|128|256))?",
+          "match": "(?<!\\w|(?<!\\.)\\.|[])}])-?[0-9][0-9_]*(?:\\.(?!\\.)(?:[0-9][0-9_]*)?)?(?:[Ee][-+]?[0-9_]+)?(?:[iu](?:8|16|32|64|128|256))?",
           "name": "constant.numeric.move"
         },
         {
@@ -1101,7 +1108,7 @@
       "name": "keyword.control.phantom.move"
     },
     "primitives": {
-      "match": "\\b(u8|u16|u32|u64|u128|u256|address|bool|signer)\\b",
+      "match": "\\b(u8|u16|u32|u64|u128|u256|i8|i16|i32|i64|i128|i256|address|bool|signer)\\b",
       "name": "support.type.primitives.move"
     },
     "public": {
@@ -1308,7 +1315,7 @@
       "name": "keyword.control.move.spec"
     },
     "spec_types": {
-      "match": "\\b(range|num|vector|bool|u8|u16|u32|u64|u128|u256|address)\\b",
+      "match": "\\b(range|num|vector|bool|u8|u16|u32|u64|u128|u256|i8|i16|i32|i64|i128|i256|address)\\b",
       "name": "support.type.vector.move"
     },
     "struct": {

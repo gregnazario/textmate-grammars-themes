@@ -910,6 +910,14 @@ export const sourcesCommunity: GrammarSource[] = [
         }
       }
 
+      if (!repository.compound_assignment) {
+        repository.compound_assignment = {
+          name: 'keyword.operator.assignment.compound.move',
+          comment: 'Move 2 compound assignment operators',
+          match: '(?:\\+=|-=)',
+        }
+      }
+
       const rootPatterns = grammar.patterns as any[] | undefined
       const exprPatterns = repository.expr?.patterns as any[] | undefined
       const pathAccess = repository.path_access
@@ -924,11 +932,27 @@ export const sourcesCommunity: GrammarSource[] = [
       insertIncludeBefore(moduleScopePatterns, '#inline', '#fun')
       insertIncludeBefore(scriptScopePatterns, '#package_visibility', '#public-scope')
       insertIncludeBefore(scriptScopePatterns, '#inline', '#fun')
+      insertIncludeBefore(exprPatterns, '#compound_assignment', '#literals')
       insertIncludeBefore(exprPatterns, '#pattern_wildcard', '#path_access')
       insertIncludeBefore(exprPatterns, '#struct_pack', '#block')
       insertIncludeAfter(structPackPatterns, '#packed_field', '#comments')
       insertIncludeAfter(structPackPatterns, '#pattern_wildcard', '#packed_field')
       insertIncludeAfter(structPackPatterns, '#expr', '#pattern_wildcard')
+
+      if (repository.primitives?.match === '\\b(u8|u16|u32|u64|u128|u256|address|bool|signer)\\b')
+        repository.primitives.match = '\\b(u8|u16|u32|u64|u128|u256|i8|i16|i32|i64|i128|i256|address|bool|signer)\\b'
+
+      if (repository.spec_types?.match === '\\b(range|num|vector|bool|u8|u16|u32|u64|u128|u256|address)\\b')
+        repository.spec_types.match = '\\b(range|num|vector|bool|u8|u16|u32|u64|u128|u256|i8|i16|i32|i64|i128|i256|address)\\b'
+
+      const literalPatterns = repository.literals?.patterns as any[] | undefined
+      const hexLiteral = findNamedPattern(literalPatterns, 'constant.numeric.hex.move')
+      if (hexLiteral?.match === '0x[_a-fA-F0-9]+(?:u(?:8|16|32|64|128|256))?')
+        hexLiteral.match = '(?<![\\w.)\\]}])(?:-)?0x[_a-fA-F0-9]+(?:[iu](?:8|16|32|64|128|256))?'
+
+      const numericLiteral = findNamedPattern(literalPatterns, 'constant.numeric.move')
+      if (numericLiteral?.match === '(?<!(?:\\w|(?:(?<!\\.)\\.)))[0-9][_0-9]*(?:\\.(?!\\.)(?:[0-9][_0-9]*)?)?(?:[eE][+\\-]?[_0-9]+)?(?:[u](?:8|16|32|64|128|256))?')
+        numericLiteral.match = '(?<!(?:\\w|(?:(?<!\\.)\\.)|[)\\]}]))(?:-)?[0-9][_0-9]*(?:\\.(?!\\.)(?:[0-9][_0-9]*)?)?(?:[eE][+\\-]?[_0-9]+)?(?:[iu](?:8|16|32|64|128|256))?'
 
       if (pathAccess?.match === '\\.[a-z][_a-z0-9]*\\b')
         pathAccess.match = '\\.(?:[a-z][_a-z0-9]*|[0-9]+)\\b'
